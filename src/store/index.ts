@@ -1,7 +1,7 @@
 import { createStore, Store, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { UsersState } from "./ducks/users/types";
 
+import { UsersState } from "./ducks/users/types";
 import rootReducer from "./ducks/rootReducer";
 import rootSaga from "./ducks/rootSaga";
 

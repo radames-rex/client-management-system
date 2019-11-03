@@ -5,35 +5,28 @@ import { connect } from "react-redux";
 import { User } from "../../store/ducks/users/types";
 import * as UserActions from "../../store/ducks/users/actions";
 import { ApplicationState } from "../../store";
-import UserItem from "../UserItem";
+import { TableList } from "../commons";
 
 interface StateProps {
 	users: User[];
 }
 
 interface DispatchProps {
-	loadRequest(): void;
+	userListRequest(): void;
 }
 
 type Props = StateProps & DispatchProps;
 
 class UserList extends Component<Props> {
 	componentDidMount = () => {
-		const { loadRequest } = this.props;
+		const { userListRequest } = this.props;
 
-		loadRequest();
+		userListRequest();
 	};
 
 	render() {
 		const { users } = this.props;
-		console.log(users);
-		return (
-			<ul>
-				{users.map(user => (
-					<UserItem key={user.id} user={user} />
-				))}
-			</ul>
-		);
+		return <TableList users={users} />;
 	}
 }
 
