@@ -1,10 +1,10 @@
 import React from "react";
 import { Form } from "formik";
 import { Link } from "react-router-dom";
-import { Grid, TextField, Button, InputLabel } from "@material-ui/core";
+import { Grid, TextField, Button, InputLabel, FormHelperText } from "@material-ui/core";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 
-const UserForm = ({ values, handleSubmit, setFieldValue, isValid }: any) => (
+const UserForm = ({ values, handleSubmit, setFieldValue, errors, isValid }: any) => (
 	<>
 		{((values.id && values.name) || !values.id) && (
 			<Form onSubmit={handleSubmit} autoComplete="off">
@@ -16,6 +16,9 @@ const UserForm = ({ values, handleSubmit, setFieldValue, isValid }: any) => (
 							value={values.name}
 							onChange={e => setFieldValue("name", e.target.value)}
 						/>
+						<FormHelperText className="fieldErrorMessage" error={true}>
+							{errors['name']}
+						</FormHelperText>
 					</Grid>
 					<Grid item xs={6}>
 						<InputLabel htmlFor="email">Email</InputLabel>
@@ -24,6 +27,9 @@ const UserForm = ({ values, handleSubmit, setFieldValue, isValid }: any) => (
 							value={values.email}
 							onChange={e => setFieldValue("email", e.target.value)}
 						/>
+						<FormHelperText className="fieldErrorMessage" error={true}>
+							{errors['email']}
+						</FormHelperText>
 					</Grid>
 					<Grid item xs={6}>
 						<InputLabel htmlFor="cpf">CPF</InputLabel>
@@ -32,6 +38,9 @@ const UserForm = ({ values, handleSubmit, setFieldValue, isValid }: any) => (
 							value={values.cpf}
 							onChange={e => setFieldValue("cpf", e.target.value)}
 						/>
+						<FormHelperText className="fieldErrorMessage" error={true}>
+							{errors['cpf']}
+						</FormHelperText>
 					</Grid>
 					<Grid item xs={6}>
 						<InputLabel htmlFor="phone">PHONE NUMBER</InputLabel>

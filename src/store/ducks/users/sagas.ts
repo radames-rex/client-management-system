@@ -1,10 +1,8 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { all, call, put, select, takeLatest } from "redux-saga/effects";
 
 import {
 	userListSuccess,
 	userListFailure,
-	userShowSuccess,
-	userShowFailure,
 	userCreateSuccess,
 	userCreateFailure,
 	userUpdateSuccess,
@@ -16,10 +14,6 @@ import { UsersTypes } from "./types";
 import UserService from "../../../services/UserService";
 
 const userService = new UserService();
-
-function apiGet(id: Number) {
-	return userService.show(id);
-}
 
 function apiList() {
 	return userService.index();
@@ -47,20 +41,12 @@ function* getUserList() {
 	}
 }
 
-function* getUser(action: any) {
-	try {
-		const response = yield call(apiGet, action.payload.id);
-		yield put(userShowSuccess(response.data));
-	} catch (error) {
-		console.log(error);
-		yield put(userShowFailure());
-	}
-}
-
 function* createUser(action: any) {
 	try {
-		let response = yield call(apiSave, action.payload.user);
-		yield put(userCreateSuccess(response.data));
+		const response = yield call(apiSave, action.payload.user);
+		let users = yield select(state => state.users.data);
+		users.push(response.data);
+		yield put(userCreateSuccess(users));
 	} catch (error) {
 		console.log(error);
 		yield put(userCreateFailure());
@@ -69,8 +55,13 @@ function* createUser(action: any) {
 
 function* updateUser(action: any) {
 	try {
-		let response = yield call(apiUpdate, action.payload.user);
-		yield put(userUpdateSuccess(response.data));
+		const response = yield call(apiUpdate, action.payload.user);
+		let users = yield select(state => state.users.data);
+		users = users.map((user: any) => {
+			if (user.id === action.payload.user.id) user = response.data;
+			return user;
+		});
+		yield put(userUpdateSuccess(users));
 	} catch (error) {
 		console.log(error);
 		yield put(userUpdateFailure());
@@ -79,8 +70,12 @@ function* updateUser(action: any) {
 
 function* deleteUser(action: any) {
 	try {
-		let response = yield call(apiDelete, action.payload.id);
-		yield put(userDestroySuccess(response.data));
+		yield call(apiDelete, action.payload.id);
+		let users = yield select(state => state.users.data);
+		users = users.filter((user: any) => {
+			if (user.id !== action.payload.id) return user;
+		});
+		yield put(userDestroySuccess(users));
 	} catch (error) {
 		console.log(error);
 		yield put(userDestroyFailure());
@@ -90,7 +85,6 @@ function* deleteUser(action: any) {
 export default function* root() {
 	yield all([
 		takeLatest(UsersTypes.REQUEST_USER_LIST, getUserList),
-		takeLatest(UsersTypes.REQUEST_USER_GET, getUser),
 		takeLatest(UsersTypes.REQUEST_USER_CREATE, createUser),
 		takeLatest(UsersTypes.REQUEST_USER_UPDATE, updateUser),
 		takeLatest(UsersTypes.REQUEST_USER_DELETE, deleteUser)

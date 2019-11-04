@@ -23,11 +23,11 @@ const validationSchema = Yup.object({
 });
 
 interface StateProps {
-	users: User[];
+	user: User;
 }
 
 interface DispatchProps {
-	userShowRequest(data: any): void;
+	userListRequest(): void;
 	userUpdateRequest(data: any): void;
 }
 
@@ -35,8 +35,8 @@ type Props = StateProps & DispatchProps;
 
 class UserEdit extends Component<Props> {
 	componentDidMount = () => {
-		const { userShowRequest } = this.props;
-		userShowRequest({ id: 1 });
+		const { userListRequest } = this.props;
+		userListRequest();
 	};
 
 	update = (json: any) => {
@@ -45,30 +45,40 @@ class UserEdit extends Component<Props> {
 	};
 
 	render() {
-		const { users } = this.props;
-		console.log(users);
+		const { user } = this.props;
+
 		return (
-			<Paper className="editContent">
-				<Typography variant="h6" gutterBottom>
-					Edição do Cliente
-				</Typography>
-				<Formik
-					render={props => <UserForm {...props} />}
-					initialValues={users}
-					validationSchema={validationSchema}
-					enableReinitialize={true}
-					onSubmit={(values, { setSubmitting }) => {
-						this.update(values);
-					}}
-				/>
-			</Paper>
+			<>
+				{!!user &&
+				(
+					<Paper className="editContent">
+						<Typography variant="h6" gutterBottom>
+							Edição do Cliente
+						</Typography>
+						<Formik
+							render={props => <UserForm {...props} />}
+							initialValues={user}
+							validationSchema={validationSchema}
+							enableReinitialize={true}
+							onSubmit={(values, { setSubmitting }) => {
+								this.update(values);
+							}}
+						/>
+					</Paper>
+				)}
+			</>
 		);
 	}
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-	users: state.users.data
-});
+const mapStateToProps = (state: ApplicationState) => {
+	let user = state.users.data.filter(u => {
+		if (u.id === 1) return u;
+	});
+	return {
+		user: user[0]
+	};
+};
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(UserActions, dispatch);

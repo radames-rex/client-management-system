@@ -17,9 +17,10 @@ import "./styles.scss";
 
 interface OwnProps {
 	users: User[];
+	deleteUsers: Function;
 }
 
-const renderCommands = (id: Number) => {
+const renderCommands = (id: Number, deleteUsers: Function) => {
 	return (
 		<>
 			<Link to={`/edit/${id}`}>
@@ -28,14 +29,14 @@ const renderCommands = (id: Number) => {
 				</IconButton>
 			</Link>
 
-			<IconButton aria-label="Delete">
+			<IconButton aria-label="Delete" onClick={() => deleteUsers(id)}>
 				<DeleteIcon />
 			</IconButton>
 		</>
 	);
 };
 
-export default function UserItem({ users }: OwnProps) {
+export default function UserItem({ users, deleteUsers }: OwnProps) {
 	return (
 		<Paper>
 			<Table className="table">
@@ -55,7 +56,7 @@ export default function UserItem({ users }: OwnProps) {
 							<TableCell>{user.email}</TableCell>
 							<TableCell>{user.cpf}</TableCell>
 							<TableCell>{user.phone}</TableCell>
-							<TableCell>{renderCommands(user.id)}</TableCell>
+							<TableCell>{renderCommands(user.id, deleteUsers)}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
