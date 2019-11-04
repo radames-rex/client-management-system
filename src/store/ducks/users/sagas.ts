@@ -27,7 +27,7 @@ function apiUpdate(user: any) {
 	return userService.update(user);
 }
 
-function apiDelete(id: Number) {
+function apiDelete(id: number) {
 	return userService.destroy(id);
 }
 

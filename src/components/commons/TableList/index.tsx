@@ -20,7 +20,7 @@ interface OwnProps {
 	deleteUsers: Function;
 }
 
-const renderCommands = (id: Number, deleteUsers: Function) => {
+const renderCommands = (id: number, deleteUsers: Function) => {
 	return (
 		<>
 			<Link to={`/edit/${id}`}>

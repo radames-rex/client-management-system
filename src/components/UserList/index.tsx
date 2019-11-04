@@ -27,7 +27,7 @@ class UserList extends Component<Props> {
 		userListRequest();
 	};
 
-	handleDelete = (id: Number) => {
+	handleDelete = (id: number) => {
 		const { userDestroyRequest } = this.props;
 		userDestroyRequest({ id: id });
 	};
